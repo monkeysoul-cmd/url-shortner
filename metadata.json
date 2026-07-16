@@ -1,0 +1,6 @@
+{
+  "name": "LinkCut URL Shortener",
+  "description": "A comprehensive, high-performance URL shortener with authentication, advanced link controls, custom aliases, QR code generation, click analytics, and a beautiful dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
