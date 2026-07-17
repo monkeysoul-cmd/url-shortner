@@ -109,7 +109,7 @@ export const CreateUrlPage: React.FC = () => {
               <div className="relative">
                 <Link2 className="absolute left-3.5 top-3.5 text-gray-400 dark:text-zinc-500 w-4.5 h-4.5" />
                 <input
-                  type="url"
+                  type="text"
                   value={originalUrl}
                   onChange={(e) => setOriginalUrl(e.target.value)}
                   required

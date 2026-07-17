@@ -80,7 +80,7 @@ export const LandingPage: React.FC = () => {
             </label>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
-                type="url"
+                type="text"
                 value={longUrl}
                 onChange={(e) => setLongUrl(e.target.value)}
                 required

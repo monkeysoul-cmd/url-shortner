@@ -122,7 +122,7 @@ export const UrlCard: React.FC<UrlCardProps> = ({ url, onUpdate, onDelete }) => 
                   className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 truncate max-w-full cursor-pointer font-display"
                   id={`link-short-${url.id}`}
                 >
-                  /{url.shortCode}
+                  {shortLink}
                   <ExternalLink className="w-4 h-4 shrink-0" />
                 </button>
 
