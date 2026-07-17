@@ -244,12 +244,12 @@ export const DashboardPage: React.FC = () => {
                     <tr key={u.id} className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/10">
                       <td className="py-3 pr-2 font-bold text-gray-800 dark:text-zinc-300 truncate max-w-[150px] sm:max-w-[220px]">
                         <a
-                          href={`/${u.shortCode}`}
+                          href={`${window.location.protocol}//${window.location.host}/${u.shortCode}`}
                           target="_blank"
                           rel="noreferrer"
                           className="hover:underline text-blue-600 dark:text-blue-400"
                         >
-                          /{u.shortCode}
+                          {`${window.location.protocol}//${window.location.host}/${u.shortCode}`}
                         </a>
                         <span className="block text-[10px] text-gray-400 dark:text-zinc-500 font-medium truncate">{u.originalUrl}</span>
                       </td>
@@ -298,12 +298,12 @@ export const DashboardPage: React.FC = () => {
                     <tr key={u.id} className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/10">
                       <td className="py-3 pr-2 font-bold text-gray-800 dark:text-zinc-300 truncate max-w-[150px] sm:max-w-[220px]">
                         <a
-                          href={`/${u.shortCode}`}
+                          href={`${window.location.protocol}//${window.location.host}/${u.shortCode}`}
                           target="_blank"
                           rel="noreferrer"
                           className="hover:underline text-blue-600 dark:text-blue-400"
                         >
-                          /{u.shortCode}
+                          {`${window.location.protocol}//${window.location.host}/${u.shortCode}`}
                         </a>
                         <span className="block text-[10px] text-gray-400 dark:text-zinc-500 font-medium truncate">{u.originalUrl}</span>
                       </td>
