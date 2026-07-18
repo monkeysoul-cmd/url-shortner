@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { 
-  Calendar, Check, Copy, Link2, Lock, PlusCircle, 
-  QrCode, Sparkles, Tag, ShieldCheck, HelpCircle, FileText 
+  Calendar, Check, Copy, Lock, PlusCircle, 
+  QrCode, Tag 
 } from "lucide-react";
 import { api } from "../services/api.js";
 import { useToast } from "../context/ToastContext.js";
@@ -28,7 +28,7 @@ export const CreateUrlPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!originalUrl.trim()) {
-      toast.error("Original destination URL is required.");
+      toast.error("Please paste a URL first.");
       return;
     }
 
@@ -37,7 +37,6 @@ export const CreateUrlPage: React.FC = () => {
     setCreatedCode(null);
 
     try {
-      // Split tags by comma
       const tags = tagsInput
         .split(",")
         .map((t) => t.trim())
@@ -56,9 +55,8 @@ export const CreateUrlPage: React.FC = () => {
       const fullShortUrl = `${window.location.protocol}//${window.location.host}/${res.shortCode}`;
       setCreatedUrl(fullShortUrl);
       setCreatedCode(res.shortCode);
-      toast.success("Short URL successfully generated!");
+      toast.success("Link created!");
       
-      // Clear main form but keep output open
       setOriginalUrl("");
       setCustomAlias("");
       setExpiresAt("");
@@ -67,7 +65,7 @@ export const CreateUrlPage: React.FC = () => {
       setIsFavorite(false);
     } catch (error: any) {
       console.error(error);
-      toast.error(error.message || "Failed to shorten URL.");
+      toast.error(error.message || "Something went wrong.");
     } finally {
       setIsSubmitting(false);
     }
@@ -78,52 +76,49 @@ export const CreateUrlPage: React.FC = () => {
     try {
       await navigator.clipboard.writeText(createdUrl);
       setCopied(true);
-      toast.success("Short URL copied!");
+      toast.success("Copied!");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      toast.error("Failed to copy link.");
+      toast.error("Couldn't copy — try selecting it manually.");
     }
   };
 
   return (
     <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 transition-colors min-h-[calc(100vh-4rem)]">
-      {/* Page Header */}
-      <div className="border-b border-gray-150 dark:border-zinc-800 pb-5">
+      {/* Header */}
+      <div className="border-b border-gray-100 dark:border-zinc-800 pb-5">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white font-display" id="create-url-title">
-          Create Short URL
+          Shorten a link
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-          Brand custom links, set expiration date thresholds, and lock with passwords.
+          Paste any URL, customize it, and get a short link you can share anywhere.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Shortener Form Card */}
-        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 p-5 sm:p-6 rounded-2xl shadow-sm space-y-6">
+        {/* Form */}
+        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-5 sm:p-6 rounded-2xl shadow-sm space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5" id="create-url-form">
-            {/* Original URL */}
+            {/* Long URL */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block">
-                Destination URL *
+                Long URL *
               </label>
-              <div className="relative">
-                <Link2 className="absolute left-3.5 top-3.5 text-gray-400 dark:text-zinc-500 w-4.5 h-4.5" />
-                <input
-                  type="text"
-                  value={originalUrl}
-                  onChange={(e) => setOriginalUrl(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl font-medium"
-                  placeholder="https://example.com/any-long-promotional-or-tracking-url"
-                  id="create-url-original"
-                />
-              </div>
+              <input
+                type="text"
+                value={originalUrl}
+                onChange={(e) => setOriginalUrl(e.target.value)}
+                required
+                className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-medium transition-shadow"
+                placeholder="https://example.com/your-really-long-url"
+                id="create-url-original"
+              />
             </div>
 
-            {/* Custom Alias */}
+            {/* Custom back-half */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-blue-500" /> Branded Custom Alias (Optional)
+              <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block">
+                ✏️ Custom back-half <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-3 text-gray-400 dark:text-zinc-600 text-sm font-semibold select-none">
@@ -133,28 +128,28 @@ export const CreateUrlPage: React.FC = () => {
                   type="text"
                   value={customAlias}
                   onChange={(e) => setCustomAlias(e.target.value)}
-                  className="w-full pl-[108px] pr-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl font-semibold"
-                  placeholder="summer-promo"
+                  className="w-full pl-[108px] pr-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+                  placeholder="summer-sale"
                   id="create-url-alias"
                 />
               </div>
               <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-medium">
-                Use a memorable name to make your links highly clickable.
+                Pick something short and memorable.
               </p>
             </div>
 
-            {/* Advanced Configuration Sub-grid */}
+            {/* Options grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              {/* Expiration */}
+              {/* Expiry */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-blue-500" /> Expiry Schedule (Optional)
+                  <Calendar className="w-3.5 h-3.5 text-indigo-500" /> Expires on <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
                 </label>
                 <input
                   type="datetime-local"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
                   id="create-url-expiry"
                 />
               </div>
@@ -162,13 +157,13 @@ export const CreateUrlPage: React.FC = () => {
               {/* Password */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-amber-500" /> Lock Password (Optional)
+                  <Lock className="w-3.5 h-3.5 text-amber-500" /> Password protect <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
                   placeholder="••••••••"
                   id="create-url-password"
                 />
@@ -177,25 +172,25 @@ export const CreateUrlPage: React.FC = () => {
               {/* Tags */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-blue-500" /> Search Tags (Optional)
+                  <Tag className="w-3.5 h-3.5 text-indigo-500" /> Tags <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
                   placeholder="newsletter, pricing, q3"
                   id="create-url-tags"
                 />
                 <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-medium leading-tight">
-                  Comma separated terms (e.g. twitter, black-friday) for search categorization.
+                  Separate with commas to organize your links.
                 </p>
               </div>
 
-              {/* Quick Settings */}
+              {/* Settings */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
-                  Link Settings
+                  Options
                 </label>
                 <div className="flex gap-4 p-3 bg-gray-50 dark:bg-zinc-950 rounded-xl border border-gray-150 dark:border-zinc-800 h-[46px] items-center">
                   <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-zinc-300 font-semibold cursor-pointer select-none">
@@ -203,9 +198,9 @@ export const CreateUrlPage: React.FC = () => {
                       type="checkbox"
                       checked={isPublic}
                       onChange={(e) => setIsPublic(e.target.checked)}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer"
+                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 cursor-pointer"
                     />
-                    Public Stats
+                    Public stats
                   </label>
                   
                   <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-zinc-300 font-semibold cursor-pointer select-none">
@@ -213,9 +208,9 @@ export const CreateUrlPage: React.FC = () => {
                       type="checkbox"
                       checked={isFavorite}
                       onChange={(e) => setIsFavorite(e.target.checked)}
-                      className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-gray-300 cursor-pointer"
+                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 cursor-pointer"
                     />
-                    Add Favorite
+                    Favorite
                   </label>
                 </div>
               </div>
@@ -224,22 +219,21 @@ export const CreateUrlPage: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-bold text-sm rounded-xl transition shadow-md shadow-blue-600/10 cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/15 cursor-pointer flex items-center justify-center gap-1.5"
               id="create-url-submit"
             >
-              <PlusCircle className="w-5 h-5" />
-              {isSubmitting ? "Generating short url..." : "Shorten URL"}
+              {isSubmitting ? "Creating..." : "Shorten URL"}
             </button>
           </form>
         </div>
 
-        {/* Dynamic creation output side-sheet (QR Code and Copy shortcuts) */}
+        {/* Side panel */}
         <div className="space-y-6">
           {createdUrl && createdCode ? (
             <div className="animate-scaleIn space-y-4">
               <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/60 p-4 rounded-2xl flex flex-col gap-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
-                  <ShieldCheck className="w-4 h-4" /> Short Link Active
+                <div className="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
+                  🎉 Link created!
                 </div>
                 
                 <div className="space-y-1.5 min-w-0">
@@ -247,7 +241,7 @@ export const CreateUrlPage: React.FC = () => {
                     href={createdUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-lg font-bold text-blue-600 dark:text-blue-400 hover:underline break-all block"
+                    className="text-lg font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all block"
                   >
                     {createdUrl}
                   </a>
@@ -260,29 +254,27 @@ export const CreateUrlPage: React.FC = () => {
                   {copied ? (
                     <>
                       <Check className="w-4 h-4 text-emerald-500" />
-                      <span className="text-emerald-600">Short Link Copied!</span>
+                      <span className="text-emerald-600">Copied!</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4 text-zinc-500" />
-                      <span>Copy Short Link</span>
+                      <span>Copy link</span>
                     </>
                   )}
                 </button>
               </div>
 
-              {/* QR Code section */}
+              {/* QR Code */}
               <UrlQrCode shortUrl={createdUrl} shortCode={createdCode} />
             </div>
           ) : (
-            <div className="p-6 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
-                <HelpCircle className="w-6 h-6" />
-              </div>
+            <div className="p-6 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4">
+              <div className="text-4xl animate-float">✂️</div>
               <div className="space-y-1">
-                <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">Cut New URL</h3>
+                <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">Ready to shorten</h3>
                 <p className="text-xs text-gray-400 dark:text-zinc-500 max-w-[200px] mx-auto leading-relaxed">
-                  Fill the shortener console on the left to immediately generate QR download scans.
+                  Paste a URL and hit shorten — your QR code will appear here.
                 </p>
               </div>
             </div>

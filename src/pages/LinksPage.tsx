@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { 
-  BarChart3, ChevronLeft, ChevronRight, Filter, Link, 
-  Search, SlidersHorizontal, Star, Trash2 
+  ChevronLeft, ChevronRight, Link, 
+  Search, Star
 } from "lucide-react";
 import { api } from "../services/api.js";
 import { useToast } from "../context/ToastContext.js";
@@ -14,13 +14,13 @@ export const LinksPage: React.FC = () => {
   const [urls, setUrls] = useState<UrlItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Filters State
+  // Filters
   const [search, setSearch] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [favorite, setFavorite] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("createdAt_desc");
   const [page, setPage] = useState<number>(1);
-  const [limit] = useState<number>(6); // 6 links per page
+  const [limit] = useState<number>(6);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalUrls, setTotalUrls] = useState<number>(0);
 
@@ -40,18 +40,16 @@ export const LinksPage: React.FC = () => {
       setTotalUrls(data.pagination.total);
     } catch (err: any) {
       console.error(err);
-      toast.error("Failed to load shortened links.");
+      toast.error("Couldn't load your links.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fetch URLs when filters or page changes
   useEffect(() => {
     fetchUrls();
   }, [search, tag, favorite, sort, page]);
 
-  // Reset page when filters change
   const handleFilterChange = () => {
     setPage(1);
   };
@@ -67,19 +65,19 @@ export const LinksPage: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 transition-colors min-h-[calc(100vh-4rem)]">
-      {/* Page Header */}
-      <div className="border-b border-gray-150 dark:border-zinc-800 pb-5">
+      {/* Header */}
+      <div className="border-b border-gray-100 dark:border-zinc-800 pb-5">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white font-display" id="links-page-title">
-          My Shortened Links
+          Your links
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
-          Manage your link cuts, trace single redirection clicks, and configure lock settings.
+          All your shortened links in one place. Search, filter, and manage them.
         </p>
       </div>
 
-      {/* Filters Toolbar Bar */}
-      <div className="bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Search Input */}
+      {/* Filters */}
+      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Search */}
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3.5 top-3.5 text-gray-400 dark:text-zinc-500 w-4 h-4" />
           <input
@@ -89,30 +87,26 @@ export const LinksPage: React.FC = () => {
               setSearch(e.target.value);
               handleFilterChange();
             }}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs sm:text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl font-medium"
-            placeholder="Search original URL, short code, or tags..."
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs sm:text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-medium transition-shadow"
+            placeholder="Search your links..."
             id="url-search-input"
           />
         </div>
 
-        {/* Filter Selection Panel */}
+        {/* Filter controls */}
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Tag Selector */}
-          <div className="relative">
-            <input
-              type="text"
-              value={tag}
-              onChange={(e) => {
-                setTag(e.target.value);
-                handleFilterChange();
-              }}
-              className="px-3.5 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 dark:text-zinc-100 rounded-xl max-w-[120px] font-semibold"
-              placeholder="Filter Tag"
-              id="url-tag-input"
-            />
-          </div>
+          <input
+            type="text"
+            value={tag}
+            onChange={(e) => {
+              setTag(e.target.value);
+              handleFilterChange();
+            }}
+            className="px-3.5 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl max-w-[120px] font-semibold transition-shadow"
+            placeholder="Filter by tag"
+            id="url-tag-input"
+          />
 
-          {/* Favorites Star Toggle */}
           <button
             onClick={() => {
               setFavorite(!favorite);
@@ -126,28 +120,24 @@ export const LinksPage: React.FC = () => {
             id="fav-filter-btn"
           >
             <Star className={`w-3.5 h-3.5 ${favorite ? "fill-current text-amber-500" : ""}`} />
-            Favorites Only
+            Favorites
           </button>
 
-          {/* Sort selector */}
-          <div className="relative font-semibold text-xs">
-            <select
-              value={sort}
-              onChange={(e) => {
-                setSort(e.target.value);
-                handleFilterChange();
-              }}
-              className="appearance-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-950 border border-gray-150 dark:border-zinc-800 rounded-xl text-xs font-semibold text-gray-600 dark:text-zinc-300 focus:outline-none cursor-pointer"
-              id="url-sort-select"
-            >
-              <option value="createdAt_desc">Newest First</option>
-              <option value="createdAt_asc">Oldest First</option>
-              <option value="clicks_desc">Most Visited</option>
-              <option value="clicks_asc">Least Visited</option>
-            </select>
-          </div>
+          <select
+            value={sort}
+            onChange={(e) => {
+              setSort(e.target.value);
+              handleFilterChange();
+            }}
+            className="appearance-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-950 border border-gray-150 dark:border-zinc-800 rounded-xl text-xs font-semibold text-gray-600 dark:text-zinc-300 focus:outline-none cursor-pointer"
+            id="url-sort-select"
+          >
+            <option value="createdAt_desc">Newest</option>
+            <option value="createdAt_asc">Oldest</option>
+            <option value="clicks_desc">Most clicked</option>
+            <option value="clicks_asc">Least clicked</option>
+          </select>
 
-          {/* Clear Filters */}
           {(search || tag || favorite || sort !== "createdAt_desc") && (
             <button
               onClick={handleClearFilters}
@@ -159,51 +149,49 @@ export const LinksPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main URLs display area */}
+      {/* Links */}
       {isLoading ? (
         <UrlListSkeleton />
       ) : urls.length === 0 ? (
-        <div className="p-10 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4 max-w-lg mx-auto mt-6">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
-            <Link className="w-6 h-6" />
-          </div>
+        <div className="p-10 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4 max-w-lg mx-auto mt-6">
+          <div className="text-4xl">🔗</div>
           <div className="space-y-1">
-            <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">No Shortened URLs Found</h3>
+            <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">No links found</h3>
             <p className="text-xs text-gray-400 dark:text-zinc-500 max-w-[280px] mx-auto leading-relaxed">
-              We couldn't find any shortened URLs matching your active filter criteria. Try clearing search filters or cut a new URL!
+              {search || tag || favorite
+                ? "No links match your filters. Try clearing them."
+                : "You haven't shortened any links yet. Let's fix that!"}
             </p>
           </div>
           <button
             onClick={() => {
               window.location.hash = "#/create";
             }}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-lg transition shadow-md shadow-blue-600/10 cursor-pointer"
+            className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold text-xs rounded-lg transition-all shadow-md shadow-indigo-600/15 cursor-pointer"
           >
-            Shorten New URL
+            Create your first link
           </button>
         </div>
       ) : (
         <div className="space-y-6">
-          {/* List stats */}
           <div className="text-xs text-gray-400 dark:text-zinc-500 font-bold px-1 uppercase tracking-wider">
-            Showing {urls.length} of {totalUrls} results
+            Showing {urls.length} of {totalUrls} links
           </div>
 
-          {/* Cards Stack */}
           <div className="grid grid-cols-1 gap-4">
             {urls.map((item) => (
               <UrlCard key={item.id} url={item} onUpdate={fetchUrls} onDelete={fetchUrls} />
             ))}
           </div>
 
-          {/* Pagination Controls Footer */}
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 pt-6 select-none">
               <button
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-                className="p-2 border border-gray-150 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:hover:bg-transparent transition cursor-pointer"
-                title="Previous Page"
+                className="p-2 border border-gray-100 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"
+                title="Previous"
               >
                 <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-zinc-300" />
               </button>
@@ -215,8 +203,8 @@ export const LinksPage: React.FC = () => {
               <button
                 disabled={page === totalPages}
                 onClick={() => setPage(page + 1)}
-                className="p-2 border border-gray-150 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:hover:bg-transparent transition cursor-pointer"
-                title="Next Page"
+                className="p-2 border border-gray-100 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"
+                title="Next"
               >
                 <ChevronRight className="w-4 h-4 text-gray-600 dark:text-zinc-300" />
               </button>
