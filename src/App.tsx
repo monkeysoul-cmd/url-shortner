@@ -36,8 +36,9 @@ const AppContent: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#09090b] flex flex-col items-center justify-center gap-4 text-gray-500 transition-colors">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-sm font-semibold tracking-wide animate-pulse">Initializing LinkCut...</span>
+        <span className="text-4xl animate-pulse-soft">✂️</span>
+        <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <span className="text-sm font-semibold tracking-wide text-gray-400 dark:text-zinc-500">Loading...</span>
       </div>
     );
   }
