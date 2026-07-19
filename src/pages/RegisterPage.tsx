@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, Mail, Lock, ShieldCheck, ArrowRight } from "lucide-react";
 import { useAuth } from "../context/AuthContext.js";
 import { useToast } from "../context/ToastContext.js";
 
@@ -52,20 +52,32 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 transition-colors">
-      <div className="w-full max-w-md bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-xl shadow-gray-200/30 dark:shadow-zinc-950/40 animate-slideUp">
+    <div className="w-full min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-[#060612]" />
+      <div className="absolute top-1/3 -right-32 w-96 h-96 bg-pink-600/12 rounded-full blur-[120px] animate-blob" />
+      <div className="absolute bottom-1/3 -left-32 w-96 h-96 bg-violet-600/15 rounded-full blur-[120px] animate-blob" style={{ animationDelay: '6s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/8 rounded-full blur-[150px]" />
+
+      {/* Card */}
+      <div className="w-full max-w-md glass-card rounded-3xl p-8 sm:p-10 animate-slideUp relative z-10">
+        {/* Gradient top accent line */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-[2px] bg-gradient-to-r from-pink-500 via-violet-500 to-indigo-500 rounded-full" />
+
         {/* Header */}
-        <div className="text-center space-y-2 mb-6">
-          <span className="text-4xl block mb-3">✂️</span>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white font-display">Create your account</h2>
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400">
+        <div className="text-center space-y-3 mb-7">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-violet-600 text-white text-3xl shadow-lg shadow-pink-600/20 mb-2">
+            ✂️
+          </div>
+          <h2 className="text-2xl font-bold text-white font-display">Create your account</h2>
+          <p className="text-sm text-zinc-400">
             Free forever. No credit card needed.
           </p>
         </div>
 
         {/* Error */}
         {errorMsg && (
-          <div className="p-3 mb-5 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/60 rounded-xl flex items-center gap-2.5 text-xs text-rose-700 dark:text-rose-400 font-medium animate-scaleIn">
+          <div className="p-3.5 mb-5 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-center gap-2.5 text-xs text-rose-300 font-medium animate-scaleIn">
             <span>⚠️</span>
             <span>{errorMsg}</span>
           </div>
@@ -73,8 +85,9 @@ export const RegisterPage: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4" id="register-form">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-pink-400" />
               Name
             </label>
             <input
@@ -82,14 +95,15 @@ export const RegisterPage: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+              className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
               placeholder="Jane Doe"
               id="register-name"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-violet-400" />
               Email
             </label>
             <input
@@ -97,14 +111,15 @@ export const RegisterPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+              className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
               placeholder="you@example.com"
               id="register-email"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-indigo-400" />
               Password
             </label>
             <input
@@ -112,14 +127,15 @@ export const RegisterPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+              className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
               placeholder="At least 6 characters"
               id="register-password"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               Confirm password
             </label>
             <input
@@ -127,7 +143,7 @@ export const RegisterPage: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+              className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
               placeholder="••••••••"
               id="register-confirm-password"
             />
@@ -136,26 +152,29 @@ export const RegisterPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/15 cursor-pointer flex items-center justify-center gap-1.5"
+            className="w-full py-3.5 bg-gradient-to-r from-pink-500 via-violet-600 to-indigo-600 hover:from-pink-400 hover:via-violet-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl transition-all shadow-lg shadow-violet-600/20 cursor-pointer flex items-center justify-center gap-2"
             id="register-submit-btn"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Creating account...
+                <span>Creating account...</span>
               </>
             ) : (
-              "Create account"
+              <>
+                <span>Create account</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
             )}
           </button>
         </form>
 
         {/* Footer */}
-        <div className="text-center mt-6 text-sm text-gray-500 dark:text-zinc-400">
+        <div className="text-center mt-6 text-sm text-zinc-500">
           Already have an account?{" "}
           <button
             onClick={() => handleNavigate("#/login")}
-            className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+            className="font-bold text-violet-400 hover:text-violet-300 cursor-pointer transition-colors"
           >
             Log in
           </button>

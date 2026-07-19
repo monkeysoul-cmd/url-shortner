@@ -35,10 +35,14 @@ const AppContent: React.FC = () => {
   // Global loading state on app mount/session validation
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-[#09090b] flex flex-col items-center justify-center gap-4 text-gray-500 transition-colors">
-        <span className="text-4xl animate-pulse-soft">✂️</span>
-        <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-sm font-semibold tracking-wide text-gray-400 dark:text-zinc-500">Loading...</span>
+      <div className="min-h-screen bg-[#060612] flex flex-col items-center justify-center gap-4 text-zinc-400 transition-colors relative overflow-hidden">
+        {/* Animated background blobs */}
+        <div className="absolute top-1/4 left-1/3 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl animate-blob" />
+        <div className="absolute bottom-1/4 right-1/3 w-72 h-72 bg-purple-600/10 rounded-full blur-3xl animate-blob" style={{ animationDelay: '4s' }} />
+
+        <span className="text-5xl animate-pulse-soft">✂️</span>
+        <div className="w-10 h-10 border-3 border-violet-500 border-t-transparent rounded-full animate-spin" />
+        <span className="text-sm font-semibold tracking-wide text-zinc-500">Loading...</span>
       </div>
     );
   }
@@ -95,7 +99,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 transition-colors flex flex-col font-sans">
+    <div className="min-h-screen bg-[#060612] text-zinc-100 transition-colors flex flex-col font-sans relative">
       <Navbar />
 
       {/* Main Container Layout */}
