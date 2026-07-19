@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Home } from "lucide-react";
+import { ArrowLeft, Home, Search } from "lucide-react";
 
 export const NotFoundPage: React.FC = () => {
   const navigateTo = (hash: string) => {
@@ -7,21 +7,28 @@ export const NotFoundPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 transition-colors">
-      <div className="text-center space-y-6 max-w-md animate-slideUp">
+    <div className="w-full min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-[#060612]" />
+      <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-rose-600/10 rounded-full blur-[120px] animate-blob" />
+      <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-violet-600/10 rounded-full blur-[120px] animate-blob" style={{ animationDelay: '5s' }} />
+
+      <div className="text-center space-y-6 max-w-md animate-slideUp relative z-10">
         {/* Visual */}
         <div className="relative inline-block mx-auto">
-          <span className="text-7xl block animate-float">🔍</span>
-          <div className="absolute -top-1 -right-3 px-2 py-0.5 bg-rose-500 text-white font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-sm">
+          <div className="w-24 h-24 glass-card rounded-3xl flex items-center justify-center mx-auto animate-float">
+            <Search className="w-10 h-10 text-zinc-400" />
+          </div>
+          <div className="absolute -top-2 -right-4 px-2.5 py-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg shadow-rose-500/25">
             404
           </div>
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight font-display">
+          <h1 className="text-3xl font-extrabold text-white tracking-tight font-display">
             Page not found
           </h1>
-          <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed max-w-sm mx-auto">
+          <p className="text-sm text-zinc-400 leading-relaxed max-w-sm mx-auto">
             This link may have expired or doesn't exist. Double-check the URL or head back home.
           </p>
         </div>
@@ -29,7 +36,7 @@ export const NotFoundPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={() => navigateTo("#/")}
-            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/15 cursor-pointer flex items-center justify-center gap-2"
+            className="px-5 py-2.5 btn-gradient text-white font-semibold text-xs sm:text-sm rounded-xl transition-all shadow-lg shadow-violet-600/15 cursor-pointer flex items-center justify-center gap-2"
           >
             <Home className="w-4 h-4" />
             Go home
@@ -39,7 +46,7 @@ export const NotFoundPage: React.FC = () => {
             onClick={() => {
               window.history.back();
             }}
-            className="px-5 py-2.5 bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 border border-gray-100 dark:border-zinc-800 text-gray-700 dark:text-zinc-300 font-semibold text-xs sm:text-sm rounded-xl cursor-pointer transition shadow-sm flex items-center justify-center gap-1.5"
+            className="px-5 py-2.5 glass-card text-zinc-300 font-semibold text-xs sm:text-sm rounded-xl cursor-pointer transition flex items-center justify-center gap-1.5 hover:text-white hover:border-violet-500/20"
           >
             <ArrowLeft className="w-4 h-4" />
             Go back

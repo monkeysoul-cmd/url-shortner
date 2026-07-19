@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { 
   Calendar, Check, Copy, Lock, PlusCircle, 
-  QrCode, Tag 
+  QrCode, Tag, Link2, Eye, EyeOff, Star, ArrowRight
 } from "lucide-react";
 import { api } from "../services/api.js";
 import { useToast } from "../context/ToastContext.js";
@@ -84,24 +84,25 @@ export const CreateUrlPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 transition-colors min-h-[calc(100vh-4rem)]">
+    <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 text-zinc-100 transition-colors min-h-[calc(100vh-4rem)]">
       {/* Header */}
-      <div className="border-b border-gray-100 dark:border-zinc-800 pb-5">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white font-display" id="create-url-title">
+      <div className="border-b border-white/[0.06] pb-5">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-display" id="create-url-title">
           Shorten a link
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
+        <p className="text-xs sm:text-sm text-zinc-500 mt-1">
           Paste any URL, customize it, and get a short link you can share anywhere.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Form */}
-        <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-5 sm:p-6 rounded-2xl shadow-sm space-y-6">
+        <div className="lg:col-span-2 glass-card p-5 sm:p-6 rounded-2xl space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5" id="create-url-form">
             {/* Long URL */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+                <Link2 className="w-3.5 h-3.5 text-violet-400" />
                 Long URL *
               </label>
               <input
@@ -109,31 +110,31 @@ export const CreateUrlPage: React.FC = () => {
                 value={originalUrl}
                 onChange={(e) => setOriginalUrl(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-medium transition-shadow"
+                className="w-full px-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
                 placeholder="https://example.com/your-really-long-url"
                 id="create-url-original"
               />
             </div>
 
             {/* Custom back-half */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block">
-                ✏️ Custom back-half <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+                ✏️ Custom back-half <span className="text-zinc-600 normal-case">(optional)</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-3 text-gray-400 dark:text-zinc-600 text-sm font-semibold select-none">
+                <span className="absolute left-3.5 top-3.5 text-zinc-600 text-sm font-semibold select-none">
                   linkcut.com /
                 </span>
                 <input
                   type="text"
                   value={customAlias}
                   onChange={(e) => setCustomAlias(e.target.value)}
-                  className="w-full pl-[108px] pr-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-semibold transition-shadow"
+                  className="w-full pl-[108px] pr-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-semibold placeholder-zinc-600 focus:outline-none"
                   placeholder="summer-sale"
                   id="create-url-alias"
                 />
               </div>
-              <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-medium">
+              <p className="text-[10px] text-zinc-600 font-medium">
                 Pick something short and memorable.
               </p>
             </div>
@@ -141,74 +142,74 @@ export const CreateUrlPage: React.FC = () => {
             {/* Options grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               {/* Expiry */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-indigo-500" /> Expires on <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-blue-400" /> Expires on <span className="text-zinc-600 normal-case">(optional)</span>
                 </label>
                 <input
                   type="datetime-local"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
                   id="create-url-expiry"
                 />
               </div>
 
               {/* Password */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-amber-500" /> Password protect <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-amber-400" /> Password protect <span className="text-zinc-600 normal-case">(optional)</span>
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
                   placeholder="••••••••"
                   id="create-url-password"
                 />
               </div>
 
               {/* Tags */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 dark:text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-indigo-500" /> Tags <span className="text-gray-400 dark:text-zinc-500 normal-case">(optional)</span>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider block flex items-center gap-1.5">
+                  <Tag className="w-3.5 h-3.5 text-emerald-400" /> Tags <span className="text-zinc-600 normal-case">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-zinc-950 text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl transition-shadow"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
                   placeholder="newsletter, pricing, q3"
                   id="create-url-tags"
                 />
-                <p className="text-[10px] text-gray-400 dark:text-zinc-500 font-medium leading-tight">
+                <p className="text-[10px] text-zinc-600 font-medium leading-tight">
                   Separate with commas to organize your links.
                 </p>
               </div>
 
               {/* Settings */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider block">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
                   Options
                 </label>
-                <div className="flex gap-4 p-3 bg-gray-50 dark:bg-zinc-950 rounded-xl border border-gray-150 dark:border-zinc-800 h-[46px] items-center">
-                  <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-zinc-300 font-semibold cursor-pointer select-none">
+                <div className="flex gap-4 p-3.5 glass-input rounded-xl items-center">
+                  <label className="flex items-center gap-1.5 text-xs text-zinc-300 font-semibold cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={isPublic}
                       onChange={(e) => setIsPublic(e.target.checked)}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 cursor-pointer"
+                      className="w-4 h-4 rounded text-violet-600 focus:ring-violet-500 border-zinc-700 cursor-pointer bg-transparent"
                     />
                     Public stats
                   </label>
                   
-                  <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-zinc-300 font-semibold cursor-pointer select-none">
+                  <label className="flex items-center gap-1.5 text-xs text-zinc-300 font-semibold cursor-pointer select-none">
                     <input
                       type="checkbox"
                       checked={isFavorite}
                       onChange={(e) => setIsFavorite(e.target.checked)}
-                      className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 cursor-pointer"
+                      className="w-4 h-4 rounded text-violet-600 focus:ring-violet-500 border-zinc-700 cursor-pointer bg-transparent"
                     />
                     Favorite
                   </label>
@@ -219,10 +220,11 @@ export const CreateUrlPage: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:opacity-50 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/15 cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3.5 btn-gradient disabled:opacity-50 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-violet-600/15 cursor-pointer flex items-center justify-center gap-2"
               id="create-url-submit"
             >
-              {isSubmitting ? "Creating..." : "Shorten URL"}
+              <span>{isSubmitting ? "Creating..." : "Shorten URL"}</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </form>
         </div>
@@ -231,8 +233,8 @@ export const CreateUrlPage: React.FC = () => {
         <div className="space-y-6">
           {createdUrl && createdCode ? (
             <div className="animate-scaleIn space-y-4">
-              <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/60 p-4 rounded-2xl flex flex-col gap-3">
-                <div className="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
+              <div className="glass-card p-5 rounded-2xl space-y-4" style={{ borderColor: 'rgba(16, 185, 129, 0.15)' }}>
+                <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
                   🎉 Link created!
                 </div>
                 
@@ -241,7 +243,7 @@ export const CreateUrlPage: React.FC = () => {
                     href={createdUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-lg font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all block"
+                    className="text-lg font-bold text-violet-300 hover:text-violet-200 hover:underline break-all block transition-colors"
                   >
                     {createdUrl}
                   </a>
@@ -249,12 +251,12 @@ export const CreateUrlPage: React.FC = () => {
 
                 <button
                   onClick={handleCopy}
-                  className="flex items-center justify-center gap-1.5 w-full py-2 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-800 text-xs text-gray-700 dark:text-zinc-300 font-semibold rounded-xl cursor-pointer transition shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-800/85"
+                  className="flex items-center justify-center gap-1.5 w-full py-2.5 glass-input text-xs text-zinc-300 font-semibold rounded-xl cursor-pointer transition hover:text-white hover:border-violet-500/30"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-4 h-4 text-emerald-500" />
-                      <span className="text-emerald-600">Copied!</span>
+                      <Check className="w-4 h-4 text-emerald-400" />
+                      <span className="text-emerald-400">Copied!</span>
                     </>
                   ) : (
                     <>
@@ -269,11 +271,11 @@ export const CreateUrlPage: React.FC = () => {
               <UrlQrCode shortUrl={createdUrl} shortCode={createdCode} />
             </div>
           ) : (
-            <div className="p-6 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4">
+            <div className="glass-card p-6 rounded-2xl text-center space-y-4">
               <div className="text-4xl animate-float">✂️</div>
               <div className="space-y-1">
-                <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">Ready to shorten</h3>
-                <p className="text-xs text-gray-400 dark:text-zinc-500 max-w-[200px] mx-auto leading-relaxed">
+                <h3 className="font-bold text-sm text-zinc-200 font-display">Ready to shorten</h3>
+                <p className="text-xs text-zinc-500 max-w-[200px] mx-auto leading-relaxed">
                   Paste a URL and hit shorten — your QR code will appear here.
                 </p>
               </div>

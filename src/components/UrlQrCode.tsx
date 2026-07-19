@@ -34,16 +34,16 @@ export const UrlQrCode: React.FC<UrlQrCodeProps> = ({ shortUrl, shortCode }) => 
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-5 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl shadow-sm text-center">
-      <div className="flex items-center gap-2 font-semibold text-gray-800 dark:text-zinc-100 text-sm">
-        <QrCode className="w-5 h-5 text-indigo-500" />
+    <div className="flex flex-col items-center gap-4 p-5 glass-card rounded-2xl text-center">
+      <div className="flex items-center gap-2 font-semibold text-zinc-100 text-sm">
+        <QrCode className="w-5 h-5 text-violet-400" />
         QR Code Scanner Link
       </div>
       
-      <div className="relative w-44 h-44 flex items-center justify-center border border-gray-150 dark:border-zinc-800 p-2 rounded-xl bg-gray-50 dark:bg-zinc-950 overflow-hidden">
+      <div className="relative w-44 h-44 flex items-center justify-center border border-white/[0.06] p-2 rounded-xl bg-white overflow-hidden">
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-zinc-950 z-10">
-            <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+          <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
+            <Loader2 className="w-6 h-6 text-violet-500 animate-spin" />
           </div>
         )}
         <img
@@ -55,14 +55,14 @@ export const UrlQrCode: React.FC<UrlQrCodeProps> = ({ shortUrl, shortCode }) => 
         />
       </div>
 
-      <div className="text-xs text-gray-500 dark:text-zinc-400 break-all px-2 max-w-[200px]">
+      <div className="text-xs text-zinc-500 break-all px-2 max-w-[200px]">
         {shortUrl}
       </div>
 
       <button
         onClick={handleDownload}
         disabled={isLoading}
-        className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-600/50 text-white font-medium text-xs rounded-xl transition shadow-md shadow-indigo-600/10 cursor-pointer disabled:cursor-not-allowed"
+        className="flex items-center justify-center gap-2 w-full px-4 py-2 btn-gradient disabled:opacity-50 text-white font-medium text-xs rounded-xl transition shadow-md shadow-violet-600/15 cursor-pointer disabled:cursor-not-allowed"
       >
         <Download className="w-4 h-4" />
         Download PNG

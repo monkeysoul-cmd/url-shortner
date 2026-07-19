@@ -64,22 +64,22 @@ export const LinksPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-[#09090b] text-gray-800 dark:text-zinc-200 transition-colors min-h-[calc(100vh-4rem)]">
+    <div className="space-y-6 animate-fadeIn p-4 sm:p-6 lg:p-8 text-zinc-100 transition-colors min-h-[calc(100vh-4rem)]">
       {/* Header */}
-      <div className="border-b border-gray-100 dark:border-zinc-800 pb-5">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white font-display" id="links-page-title">
+      <div className="border-b border-white/[0.06] pb-5">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-display" id="links-page-title">
           Your links
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-zinc-400 mt-1">
+        <p className="text-xs sm:text-sm text-zinc-500 mt-1">
           All your shortened links in one place. Search, filter, and manage them.
         </p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="glass-card p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3.5 top-3.5 text-gray-400 dark:text-zinc-500 w-4 h-4" />
+          <Search className="absolute left-3.5 top-3 text-zinc-500 w-4 h-4" />
           <input
             type="text"
             value={search}
@@ -87,7 +87,7 @@ export const LinksPage: React.FC = () => {
               setSearch(e.target.value);
               handleFilterChange();
             }}
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs sm:text-sm border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl font-medium transition-shadow"
+            className="w-full pl-10 pr-4 py-2.5 glass-input text-xs sm:text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
             placeholder="Search your links..."
             id="url-search-input"
           />
@@ -102,7 +102,7 @@ export const LinksPage: React.FC = () => {
               setTag(e.target.value);
               handleFilterChange();
             }}
-            className="px-3.5 py-2.5 bg-gray-50 dark:bg-zinc-950 text-xs border border-gray-150 dark:border-zinc-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 dark:text-zinc-100 rounded-xl max-w-[120px] font-semibold transition-shadow"
+            className="px-3.5 py-2.5 glass-input text-xs text-zinc-100 rounded-xl max-w-[120px] font-semibold placeholder-zinc-600 focus:outline-none"
             placeholder="Filter by tag"
             id="url-tag-input"
           />
@@ -114,12 +114,12 @@ export const LinksPage: React.FC = () => {
             }}
             className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer border ${
               favorite
-                ? "bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400"
-                : "bg-gray-50 dark:bg-zinc-950 border-gray-150 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-800 hover:bg-gray-100 dark:hover:bg-zinc-800"
+                ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                : "glass-input text-zinc-400 hover:text-zinc-200 hover:border-violet-500/20"
             }`}
             id="fav-filter-btn"
           >
-            <Star className={`w-3.5 h-3.5 ${favorite ? "fill-current text-amber-500" : ""}`} />
+            <Star className={`w-3.5 h-3.5 ${favorite ? "fill-current text-amber-400" : ""}`} />
             Favorites
           </button>
 
@@ -129,7 +129,7 @@ export const LinksPage: React.FC = () => {
               setSort(e.target.value);
               handleFilterChange();
             }}
-            className="appearance-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-950 border border-gray-150 dark:border-zinc-800 rounded-xl text-xs font-semibold text-gray-600 dark:text-zinc-300 focus:outline-none cursor-pointer"
+            className="appearance-none px-4 py-2.5 glass-input rounded-xl text-xs font-semibold text-zinc-300 focus:outline-none cursor-pointer"
             id="url-sort-select"
           >
             <option value="createdAt_desc">Newest</option>
@@ -141,7 +141,7 @@ export const LinksPage: React.FC = () => {
           {(search || tag || favorite || sort !== "createdAt_desc") && (
             <button
               onClick={handleClearFilters}
-              className="text-xs font-bold text-gray-400 hover:text-rose-500 transition cursor-pointer"
+              className="text-xs font-bold text-zinc-500 hover:text-rose-400 transition cursor-pointer"
             >
               Clear
             </button>
@@ -153,11 +153,11 @@ export const LinksPage: React.FC = () => {
       {isLoading ? (
         <UrlListSkeleton />
       ) : urls.length === 0 ? (
-        <div className="p-10 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl text-center shadow-sm space-y-4 max-w-lg mx-auto mt-6">
+        <div className="glass-card p-10 rounded-2xl text-center space-y-4 max-w-lg mx-auto mt-6">
           <div className="text-4xl">🔗</div>
           <div className="space-y-1">
-            <h3 className="font-bold text-sm text-gray-800 dark:text-zinc-200 font-display">No links found</h3>
-            <p className="text-xs text-gray-400 dark:text-zinc-500 max-w-[280px] mx-auto leading-relaxed">
+            <h3 className="font-bold text-sm text-zinc-200 font-display">No links found</h3>
+            <p className="text-xs text-zinc-500 max-w-[280px] mx-auto leading-relaxed">
               {search || tag || favorite
                 ? "No links match your filters. Try clearing them."
                 : "You haven't shortened any links yet. Let's fix that!"}
@@ -167,14 +167,14 @@ export const LinksPage: React.FC = () => {
             onClick={() => {
               window.location.hash = "#/create";
             }}
-            className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold text-xs rounded-lg transition-all shadow-md shadow-indigo-600/15 cursor-pointer"
+            className="px-4 py-2 btn-gradient text-white font-semibold text-xs rounded-lg transition-all shadow-md shadow-violet-600/15 cursor-pointer"
           >
             Create your first link
           </button>
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="text-xs text-gray-400 dark:text-zinc-500 font-bold px-1 uppercase tracking-wider">
+          <div className="text-xs text-zinc-500 font-bold px-1 uppercase tracking-wider">
             Showing {urls.length} of {totalUrls} links
           </div>
 
@@ -190,23 +190,23 @@ export const LinksPage: React.FC = () => {
               <button
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
-                className="p-2 border border-gray-100 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"
+                className="p-2 glass-card rounded-xl hover:border-violet-500/20 disabled:opacity-40 transition cursor-pointer"
                 title="Previous"
               >
-                <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-zinc-300" />
+                <ChevronLeft className="w-4 h-4 text-zinc-300" />
               </button>
 
-              <span className="text-xs font-semibold text-gray-500 dark:text-zinc-400">
-                Page <span className="font-bold text-gray-800 dark:text-zinc-200">{page}</span> of {totalPages}
+              <span className="text-xs font-semibold text-zinc-500">
+                Page <span className="font-bold text-zinc-200">{page}</span> of {totalPages}
               </span>
 
               <button
                 disabled={page === totalPages}
                 onClick={() => setPage(page + 1)}
-                className="p-2 border border-gray-100 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-40 transition cursor-pointer"
+                className="p-2 glass-card rounded-xl hover:border-violet-500/20 disabled:opacity-40 transition cursor-pointer"
                 title="Next"
               >
-                <ChevronRight className="w-4 h-4 text-gray-600 dark:text-zinc-300" />
+                <ChevronRight className="w-4 h-4 text-zinc-300" />
               </button>
             </div>
           )}

@@ -2,27 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export const ThemeToggle: React.FC = () => {
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    const saved = localStorage.getItem("linkcut_theme");
-    if (saved) return saved === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  // Always dark mode in the new design, but keep toggle functional
+  const [isDark, setIsDark] = useState<boolean>(true);
 
   useEffect(() => {
     const root = document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-      localStorage.setItem("linkcut_theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("linkcut_theme", "light");
-    }
-  }, [isDark]);
+    root.classList.add("dark");
+    localStorage.setItem("linkcut_theme", "dark");
+  }, []);
 
   return (
     <button
       onClick={() => setIsDark(!isDark)}
-      className="p-2 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300 hover:bg-gray-200 dark:hover:bg-zinc-700 hover:text-gray-900 dark:hover:text-zinc-100 transition-all shadow-sm cursor-pointer border border-transparent dark:border-zinc-700/50 overflow-hidden"
+      className="p-2 rounded-xl bg-white/[0.04] text-zinc-400 hover:text-violet-400 hover:bg-white/[0.08] transition-all shadow-sm cursor-pointer border border-white/[0.06] overflow-hidden"
       title={isDark ? "Switch to light mode" : "Switch to dark mode"}
       aria-label="Toggle dark mode"
       id="theme-toggle"
