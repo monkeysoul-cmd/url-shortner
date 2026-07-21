@@ -152,7 +152,7 @@ export const RegisterPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 bg-gradient-to-r from-pink-500 via-violet-600 to-indigo-600 hover:from-pink-400 hover:via-violet-500 hover:to-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl transition-all shadow-lg shadow-violet-600/20 cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-3.5 btn-gradient disabled:opacity-50 text-white font-bold rounded-xl transition-all shadow-lg shadow-violet-600/20 cursor-pointer flex items-center justify-center gap-2"
             id="register-submit-btn"
           >
             {isSubmitting ? (
