@@ -384,6 +384,62 @@
       "clicks": 0,
       "clickAnalytics": [],
       "createdAt": "2026-07-21T16:57:45.776Z"
+    },
+    {
+      "userId": "qeratkcfx",
+      "originalUrl": "https://google.com",
+      "shortCode": "VvOxrd",
+      "customAlias": null,
+      "expiresAt": null,
+      "isActive": true,
+      "passwordHash": null,
+      "tags": [],
+      "isPublic": true,
+      "isFavorite": false,
+      "id": "6fnspe1zo",
+      "clicks": 0,
+      "clickAnalytics": [],
+      "createdAt": "2026-07-21T17:09:31.919Z"
+    },
+    {
+      "userId": null,
+      "originalUrl": "https://google.com",
+      "shortCode": "UDpuPX",
+      "customAlias": null,
+      "expiresAt": null,
+      "isActive": true,
+      "passwordHash": null,
+      "tags": [],
+      "isPublic": true,
+      "isFavorite": false,
+      "id": "7tqfoqvub",
+      "clicks": 1,
+      "clickAnalytics": [
+        {
+          "timestamp": "2026-07-21T17:10:34.238Z",
+          "ip": "127.0.0.1",
+          "browser": "Chrome",
+          "device": "Desktop",
+          "country": "Japan"
+        }
+      ],
+      "createdAt": "2026-07-21T17:10:15.707Z"
+    },
+    {
+      "userId": null,
+      "originalUrl": "https://google.com",
+      "shortCode": "PCCpmn",
+      "customAlias": null,
+      "expiresAt": null,
+      "isActive": true,
+      "passwordHash": null,
+      "tags": [],
+      "isPublic": true,
+      "isFavorite": false,
+      "id": "ysd07ihxw",
+      "clicks": 0,
+      "clickAnalytics": [],
+      "createdAt": "2026-07-21T17:11:07.408Z"
     }
   ]
 }
