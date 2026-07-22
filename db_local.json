@@ -440,6 +440,22 @@
       "clicks": 0,
       "clickAnalytics": [],
       "createdAt": "2026-07-21T17:11:07.408Z"
+    },
+    {
+      "userId": null,
+      "originalUrl": "http://localhost:3000/",
+      "shortCode": "CvxGZ2",
+      "customAlias": null,
+      "expiresAt": null,
+      "isActive": true,
+      "passwordHash": null,
+      "tags": [],
+      "isPublic": true,
+      "isFavorite": false,
+      "id": "uh1k5vhav",
+      "clicks": 0,
+      "clickAnalytics": [],
+      "createdAt": "2026-07-22T14:16:23.849Z"
     }
   ]
 }
