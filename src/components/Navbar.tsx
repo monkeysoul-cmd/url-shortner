@@ -20,7 +20,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#060612]/70 backdrop-blur-2xl border-b border-white/[0.06] transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#060612]/70 backdrop-blur-2xl border-b border-black/5 dark:border-white/[0.06] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <button

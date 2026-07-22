@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { db, Url } from "../config/db.js";
+import { Url } from "../config/db.js";
 import { authenticateToken, AuthenticatedRequest } from "../middleware/auth.js";
 import { generateShortCode, isValidUrl, normalizeUrl } from "../utils/helpers.js";
 
@@ -57,9 +57,9 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       }
       
       // Check if alias already in use
-      const existing = db.urls.findOne(
-        (u) => u.shortCode === trimmedAlias || u.customAlias === trimmedAlias
-      );
+      const existing = await Url.findOne({
+        $or: [{ shortCode: trimmedAlias }, { customAlias: trimmedAlias }]
+      });
       if (existing) {
         res.status(400).json({ message: "Custom alias or short code already in use" });
         return;
@@ -70,7 +70,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       let attempts = 0;
       while (attempts < 10) {
         const code = generateShortCode(6);
-        const existing = db.urls.findOne((u) => u.shortCode === code);
+        const existing = await Url.findOne({ shortCode: code });
         if (!existing) {
           finalShortCode = code;
           break;
@@ -91,15 +91,15 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     }
 
     // Create the record
-    const newUrl = db.urls.create({
-      userId,
+    const newUrl = await Url.create({
+      userId: userId || null,
       originalUrl: normalizedOriginal,
       shortCode: finalShortCode,
       customAlias: customAlias ? finalShortCode : null,
       expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
       isActive: true,
       passwordHash,
-      tags: Array.isArray(tags) ? tags.map((t) => t.trim().toLowerCase()) : [],
+      tags: Array.isArray(tags) ? tags.map((t: string) => t.trim().toLowerCase()) : [],
       isPublic: isPublic ?? true,
       isFavorite: isFavorite ?? false,
     });
@@ -112,7 +112,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
 });
 
 // GET /api/url (Get all URLs for authenticated user - Protected)
-router.get("/", authenticateToken as any, (req: AuthenticatedRequest, res: Response) => {
+router.get("/", authenticateToken as any, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const search = req.query.search as string;
@@ -122,50 +122,43 @@ router.get("/", authenticateToken as any, (req: AuthenticatedRequest, res: Respo
     const limit = parseInt(req.query.limit as string) || 10;
     const sort = (req.query.sort as string) || "createdAt_desc";
 
-    // Filter user's urls
-    let urls = db.urls.find((u) => u.userId === userId);
+    // Build Mongoose query
+    const query: any = { userId };
 
-    // Apply search filter (on originalUrl, shortCode, tags)
     if (search) {
-      const query = search.toLowerCase();
-      urls = urls.filter(
-        (u) =>
-          u.originalUrl.toLowerCase().includes(query) ||
-          u.shortCode.toLowerCase().includes(query) ||
-          u.tags.some((t) => t.includes(query))
-      );
+      const searchRegex = new RegExp(search, 'i');
+      query.$or = [
+        { originalUrl: searchRegex },
+        { shortCode: searchRegex },
+        { tags: searchRegex }
+      ];
     }
 
-    // Apply tag filter
     if (tag) {
-      const targetTag = tag.toLowerCase();
-      urls = urls.filter((u) => u.tags.includes(targetTag));
+      query.tags = tag.toLowerCase();
     }
 
-    // Apply favorite filter
     if (favorite === "true") {
-      urls = urls.filter((u) => u.isFavorite);
+      query.isFavorite = true;
     }
 
-    // Apply Sorting
-    if (sort === "createdAt_desc") {
-      urls.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } else if (sort === "createdAt_asc") {
-      urls.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-    } else if (sort === "clicks_desc") {
-      urls.sort((a, b) => b.clicks - a.clicks);
-    } else if (sort === "clicks_asc") {
-      urls.sort((a, b) => a.clicks - b.clicks);
-    }
+    // Determine sorting
+    let sortObj: any = { createdAt: -1 };
+    if (sort === "createdAt_desc") sortObj = { createdAt: -1 };
+    if (sort === "createdAt_asc") sortObj = { createdAt: 1 };
+    if (sort === "clicks_desc") sortObj = { clicks: -1 };
+    if (sort === "clicks_asc") sortObj = { clicks: 1 };
 
-    // Pagination
-    const total = urls.length;
+    const total = await Url.countDocuments(query);
     const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedUrls = urls.slice(startIndex, endIndex);
+
+    const urls = await Url.find(query)
+      .sort(sortObj)
+      .skip(startIndex)
+      .limit(limit);
 
     res.json({
-      urls: paginatedUrls,
+      urls,
       pagination: {
         total,
         page,
@@ -180,19 +173,19 @@ router.get("/", authenticateToken as any, (req: AuthenticatedRequest, res: Respo
 });
 
 // GET /api/url/:id (Get details of specific URL - Protected)
-router.get("/:id", authenticateToken as any, (req: AuthenticatedRequest, res: Response) => {
+router.get("/:id", authenticateToken as any, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const { id } = req.params;
 
-    const url = db.urls.findById(id);
+    const url = await Url.findById(id);
     if (!url) {
       res.status(404).json({ message: "URL not found" });
       return;
     }
 
     // Ensure user owns this link
-    if (url.userId !== userId) {
+    if (url.userId && url.userId.toString() !== userId) {
       res.status(403).json({ message: "Access denied. You do not own this URL." });
       return;
     }
@@ -220,18 +213,18 @@ router.put("/:id", authenticateToken as any, async (req: AuthenticatedRequest, r
       isFavorite,
     } = req.body;
 
-    const url = db.urls.findById(id);
+    const url = await Url.findById(id);
     if (!url) {
       res.status(404).json({ message: "URL not found" });
       return;
     }
 
-    if (url.userId !== userId) {
+    if (url.userId && url.userId.toString() !== userId) {
       res.status(403).json({ message: "Access denied. You do not own this URL." });
       return;
     }
 
-    const updates: Partial<Omit<Url, "id" | "createdAt" | "userId">> = {};
+    const updates: any = {};
 
     if (originalUrl) {
       const normalizedOriginal = normalizeUrl(originalUrl);
@@ -249,9 +242,10 @@ router.put("/:id", authenticateToken as any, async (req: AuthenticatedRequest, r
         const trimmedAlias = customAlias.trim().replace(/\s+/g, "-");
         // Check uniqueness if changed
         if (trimmedAlias !== url.customAlias && trimmedAlias !== url.shortCode) {
-          const existing = db.urls.findOne(
-            (u) => (u.shortCode === trimmedAlias || u.customAlias === trimmedAlias) && u.id !== id
-          );
+          const existing = await Url.findOne({
+            $or: [{ shortCode: trimmedAlias }, { customAlias: trimmedAlias }],
+            _id: { $ne: id }
+          });
           if (existing) {
             res.status(400).json({ message: "Custom alias or short code already in use" });
             return;
@@ -279,7 +273,7 @@ router.put("/:id", authenticateToken as any, async (req: AuthenticatedRequest, r
     }
 
     if (tags !== undefined) {
-      updates.tags = Array.isArray(tags) ? tags.map((t) => t.trim().toLowerCase()) : [];
+      updates.tags = Array.isArray(tags) ? tags.map((t: string) => t.trim().toLowerCase()) : [];
     }
 
     if (password !== undefined) {
@@ -291,7 +285,7 @@ router.put("/:id", authenticateToken as any, async (req: AuthenticatedRequest, r
       }
     }
 
-    const updatedUrl = db.urls.update(id, updates);
+    const updatedUrl = await Url.findByIdAndUpdate(id, updates, { new: true });
     res.json(updatedUrl);
   } catch (error) {
     console.error("Update URL error:", error);
@@ -300,23 +294,23 @@ router.put("/:id", authenticateToken as any, async (req: AuthenticatedRequest, r
 });
 
 // DELETE /api/url/:id (Delete URL - Protected)
-router.delete("/:id", authenticateToken as any, (req: AuthenticatedRequest, res: Response) => {
+router.delete("/:id", authenticateToken as any, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const { id } = req.params;
 
-    const url = db.urls.findById(id);
+    const url = await Url.findById(id);
     if (!url) {
       res.status(404).json({ message: "URL not found" });
       return;
     }
 
-    if (url.userId !== userId) {
+    if (url.userId && url.userId.toString() !== userId) {
       res.status(403).json({ message: "Access denied. You do not own this URL." });
       return;
     }
 
-    db.urls.delete(id);
+    await Url.findByIdAndDelete(id);
     res.json({ message: "Shortened URL successfully deleted", id });
   } catch (error) {
     console.error("Delete URL error:", error);
