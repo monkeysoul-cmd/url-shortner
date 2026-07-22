@@ -52,7 +52,7 @@ export const CreateUrlPage: React.FC = () => {
         isFavorite,
       });
 
-      const fullShortUrl = `${window.location.protocol}//${window.location.host}/${res.shortCode}`;
+      const fullShortUrl = `https://linkcut.com/${res.shortCode}`;
       setCreatedUrl(fullShortUrl);
       setCreatedCode(res.shortCode);
       toast.success("Link created!");
@@ -110,7 +110,7 @@ export const CreateUrlPage: React.FC = () => {
                 value={originalUrl}
                 onChange={(e) => setOriginalUrl(e.target.value)}
                 required
-                className="w-full px-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-600 focus:outline-none"
+                className="w-full px-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-medium placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none"
                 placeholder="https://example.com/your-really-long-url"
                 id="create-url-original"
               />
@@ -122,14 +122,14 @@ export const CreateUrlPage: React.FC = () => {
                 ✏️ Custom back-half <span className="text-zinc-600 normal-case">(optional)</span>
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-3.5 text-zinc-600 text-sm font-semibold select-none">
+                <span className="absolute left-3.5 top-3.5 z-10 pointer-events-none text-zinc-800 dark:text-zinc-300 text-sm font-semibold select-none">
                   linkcut.com /
                 </span>
                 <input
                   type="text"
                   value={customAlias}
                   onChange={(e) => setCustomAlias(e.target.value)}
-                  className="w-full pl-[108px] pr-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-semibold placeholder-zinc-600 focus:outline-none"
+                  className="w-full pl-[108px] pr-4 py-3.5 glass-input text-sm text-zinc-100 rounded-xl font-semibold placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none"
                   placeholder="summer-sale"
                   id="create-url-alias"
                 />
@@ -150,7 +150,7 @@ export const CreateUrlPage: React.FC = () => {
                   type="datetime-local"
                   value={expiresAt}
                   onChange={(e) => setExpiresAt(e.target.value)}
-                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none"
                   id="create-url-expiry"
                 />
               </div>
@@ -164,7 +164,7 @@ export const CreateUrlPage: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none"
                   placeholder="••••••••"
                   id="create-url-password"
                 />
@@ -179,7 +179,7 @@ export const CreateUrlPage: React.FC = () => {
                   type="text"
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
-                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-600 focus:outline-none"
+                  className="w-full px-4 py-3 glass-input text-sm text-zinc-100 rounded-xl placeholder-zinc-500 dark:placeholder-zinc-400 focus:outline-none"
                   placeholder="newsletter, pricing, q3"
                   id="create-url-tags"
                 />

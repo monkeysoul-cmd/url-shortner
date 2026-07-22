@@ -22,7 +22,7 @@ export const LandingPage: React.FC = () => {
     setIsShortening(true);
     try {
       const data = await api.url.create({ originalUrl: longUrl });
-      const fullShort = `${window.location.protocol}//${window.location.host}/${data.shortCode}`;
+      const fullShort = `https://linkcut.com/${data.shortCode}`;
       setShortenedUrl(fullShort);
       toast.success("Link shortened!");
     } catch (error: any) {

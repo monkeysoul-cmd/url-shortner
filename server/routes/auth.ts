@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { db } from "../config/db.js";
+import { User } from "../config/db.js";
 import { generateToken, authenticateToken, AuthenticatedRequest } from "../middleware/auth.js";
 
 const router = Router();
@@ -24,7 +24,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     const trimmedEmail = email.trim().toLowerCase();
 
     // Check if user already exists
-    const existingUser = db.users.findOne((u) => u.email === trimmedEmail);
+    const existingUser = await User.findOne({ email: trimmedEmail });
     if (existingUser) {
       res.status(400).json({ message: "User with this email already exists" });
       return;
@@ -35,7 +35,7 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     const passwordHash = await bcrypt.hash(password, salt);
 
     // Create user in our DB
-    const user = db.users.create({
+    const user = await User.create({
       name,
       email: trimmedEmail,
       passwordHash,
@@ -72,7 +72,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     const trimmedEmail = email.trim().toLowerCase();
 
     // Find user
-    const user = db.users.findOne((u) => u.email === trimmedEmail);
+    const user = await User.findOne({ email: trimmedEmail });
     if (!user) {
       res.status(400).json({ message: "Invalid email or password" });
       return;
@@ -104,14 +104,14 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
 });
 
 // GET /api/auth/me (Protected)
-router.get("/me", authenticateToken as any, (req: AuthenticatedRequest, res: Response) => {
+router.get("/me", authenticateToken as any, async (req: AuthenticatedRequest, res: Response) => {
   try {
     if (!req.user) {
       res.status(401).json({ message: "Not authenticated" });
       return;
     }
 
-    const user = db.users.findById(req.user.id);
+    const user = await User.findById(req.user.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;

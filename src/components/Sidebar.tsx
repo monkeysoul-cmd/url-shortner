@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-white/[0.06] bg-[#060612]/50 backdrop-blur-sm h-[calc(100vh-4rem)] p-4 sticky top-16 justify-between select-none">
+      <aside className="hidden md:flex flex-col w-64 border-r border-black/5 dark:border-white/[0.06] bg-white dark:bg-[#060612]/50 dark:backdrop-blur-sm h-[calc(100vh-4rem)] p-4 sticky top-16 justify-between select-none shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-none">
         <div className="flex flex-col gap-1">
           <div className="px-3 mb-4 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
             Menu
@@ -64,8 +64,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
                 onClick={() => handleNavigate(item.path)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all cursor-pointer group ${
                   isActive
-                    ? "bg-gradient-to-r from-violet-600/15 to-purple-600/10 text-violet-300 shadow-sm border border-violet-500/15"
-                    : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200 border border-transparent"
+                    ? "bg-gradient-to-r from-violet-600/10 dark:from-violet-600/15 to-purple-600/5 dark:to-purple-600/10 text-violet-700 dark:text-violet-300 shadow-sm border border-violet-500/15"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-black/5 dark:hover:bg-white/[0.04] hover:text-zinc-900 dark:hover:text-zinc-200 border border-transparent"
                 }`}
                 id={`sidebar-item-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
               >
@@ -74,7 +74,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
                 </span>
                 <span>{item.label}</span>
                 {isActive && (
-                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400 shadow-sm shadow-violet-400/50" />
+                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-500 dark:bg-violet-400 shadow-sm shadow-violet-500/50" />
                 )}
               </button>
             );
@@ -84,7 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
         {/* Bottom Logout */}
         <button
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm text-zinc-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all cursor-pointer border border-transparent hover:border-rose-500/15"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm text-zinc-600 dark:text-zinc-500 hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition-all cursor-pointer border border-transparent hover:border-rose-500/15"
           id="sidebar-logout"
         >
           <LogOut className="w-5 h-5 shrink-0" />
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#060612]/90 backdrop-blur-2xl border-t border-white/[0.06] z-40 flex items-center justify-around px-2 pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-[#060612]/90 dark:backdrop-blur-2xl border-t border-black/5 dark:border-white/[0.06] z-40 flex items-center justify-around px-2 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.02)] dark:shadow-none">
         {navItems.map((item) => {
           const isActive = currentPath === item.path;
 
@@ -103,8 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPath }) => {
               onClick={() => handleNavigate(item.path)}
               className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 px-2 rounded-lg cursor-pointer transition-all ${
                 isActive
-                  ? "text-violet-400"
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "text-violet-600 dark:text-violet-400"
+                  : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
               }`}
               id={`mobile-nav-item-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
             >

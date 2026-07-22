@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import { db } from "../config/db.js";
+import { Url } from "../config/db.js";
 import { parseUserAgent } from "../utils/helpers.js";
 
 const router = Router();
@@ -17,7 +17,7 @@ router.post("/api/url/:shortCode/verify", async (req: Request, res: Response): P
       return;
     }
 
-    const url = db.urls.findOne((u) => u.shortCode === shortCode);
+    const url = await Url.findOne({ shortCode });
     if (!url) {
       res.status(404).json({ message: "Short URL not found" });
       return;
@@ -40,13 +40,15 @@ router.post("/api/url/:shortCode/verify", async (req: Request, res: Response): P
     const { browser, device, country } = parseUserAgent(userAgent);
 
     // Record click
-    db.urls.recordClick(url.id, {
+    url.clicks += 1;
+    url.clickAnalytics.push({
       timestamp: new Date().toISOString(),
       ip,
       browser,
       device,
       country,
     });
+    await url.save();
 
     res.json({ originalUrl: url.originalUrl });
   } catch (error) {
@@ -57,7 +59,7 @@ router.post("/api/url/:shortCode/verify", async (req: Request, res: Response): P
 
 // GET /:shortCode
 // Main redirect handler. Checks expiry, password protection, active status, logs analytics, and redirects.
-router.get("/:shortCode", (req: Request, res: Response, next: import("express").NextFunction) => {
+router.get("/:shortCode", async (req: Request, res: Response, next: import("express").NextFunction) => {
   try {
     const { shortCode } = req.params;
 
@@ -73,7 +75,7 @@ router.get("/:shortCode", (req: Request, res: Response, next: import("express").
       return next();
     }
 
-    const url = db.urls.findOne((u) => u.shortCode === shortCode);
+    const url = await Url.findOne({ shortCode });
     if (!url) {
       // Redirect to frontend's 404 handler
       res.redirect("/#/404");
@@ -108,13 +110,15 @@ router.get("/:shortCode", (req: Request, res: Response, next: import("express").
     const { browser, device, country } = parseUserAgent(userAgent);
 
     // Record click
-    db.urls.recordClick(url.id, {
+    url.clicks += 1;
+    url.clickAnalytics.push({
       timestamp: new Date().toISOString(),
       ip,
       browser,
       device,
       country,
     });
+    await url.save();
 
     // 5. Redirect to original URL
     res.redirect(url.originalUrl);

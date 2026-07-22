@@ -1,16 +1,16 @@
 import { Router, Response } from "express";
-import { db } from "../config/db.js";
+import { Url } from "../config/db.js";
 import { authenticateToken, AuthenticatedRequest } from "../middleware/auth.js";
 
 const router = Router();
 
 // GET /api/analytics (Get aggregated user metrics and statistics - Protected)
-router.get("/", authenticateToken as any, (req: AuthenticatedRequest, res: Response) => {
+router.get("/", authenticateToken as any, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.id;
 
     // Fetch user's URLs
-    const urls = db.urls.find((u) => u.userId === userId);
+    const urls = await Url.find({ userId });
 
     // 1. Overall Metrics
     const totalUrls = urls.length;
