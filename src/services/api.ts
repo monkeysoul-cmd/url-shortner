@@ -14,6 +14,19 @@ class ApiService {
     return headers;
   }
 
+  private async handleError(res: Response, defaultMessage: string): Promise<never> {
+    const errorData = await res.json().catch(() => ({}));
+    let errorMessage = defaultMessage;
+    if (errorData && errorData.message) {
+      errorMessage = Array.isArray(errorData.message) 
+        ? errorData.message.join(", ") 
+        : typeof errorData.message === "object" 
+          ? JSON.stringify(errorData.message) 
+          : String(errorData.message);
+    }
+    throw new Error(errorMessage);
+  }
+
   // Authentication Calls
   public auth = {
     register: async (name: string, email: string, password: string): Promise<{ token: string; user: User }> => {
@@ -23,8 +36,7 @@ class ApiService {
         body: JSON.stringify({ name, email, password }),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to register account.");
+        await this.handleError(res, "Failed to register account.");
       }
       return res.json();
     },
@@ -36,8 +48,7 @@ class ApiService {
         body: JSON.stringify({ email, password }),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Invalid email or password.");
+        await this.handleError(res, "Invalid email or password.");
       }
       return res.json();
     },
@@ -71,8 +82,7 @@ class ApiService {
         body: JSON.stringify(data),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to shorten URL.");
+        await this.handleError(res, "Failed to shorten URL.");
       }
       return res.json();
     },
@@ -98,8 +108,7 @@ class ApiService {
         headers: this.getHeaders(),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to load URLs.");
+        await this.handleError(res, "Failed to load URLs.");
       }
       return res.json();
     },
@@ -134,8 +143,7 @@ class ApiService {
         body: JSON.stringify(updates),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to update URL.");
+        await this.handleError(res, "Failed to update URL.");
       }
       return res.json();
     },
@@ -158,8 +166,7 @@ class ApiService {
         body: JSON.stringify({ password }),
       });
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Invalid link password.");
+        await this.handleError(res, "Invalid link password.");
       }
       return res.json();
     },
